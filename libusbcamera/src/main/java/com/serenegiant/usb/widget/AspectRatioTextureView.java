@@ -27,7 +27,7 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.TextureView;
 
-import com.serenegiant.widget.IAspectRatioView;
+import com.serenegiant.usb.widget.IAspectRatioView2;
 
 /**
  * change the view size with keeping the specified aspect ratio.

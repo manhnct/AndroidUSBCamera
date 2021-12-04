@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">libusbcamera</string>
-    <string name="select">请选择USB摄像头</string>
-    <string name="refresh">刷新</string>
+    <string name="select">Select USB Web Camera</string>
     <string name="camera">Camera</string>
-    <string name="no_device">未搜索到可用USB Camera设备</string>
+    <string name="refresh">Refresh</string>
+    <string name="no_device">No USB camera found</string>
 </resources>

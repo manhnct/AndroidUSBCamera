@@ -187,8 +187,7 @@ public class UVCCamera {
      * @param ctrlBlock
      */
     public synchronized void open(final UsbControlBlock ctrlBlock) {
-    	int result = -2;
-		StringBuilder sb = new StringBuilder();
+    	int result;
     	try {
 			mCtrlBlock = ctrlBlock.clone();
 			result = nativeConnect(mNativePtr,
@@ -197,26 +196,13 @@ public class UVCCamera {
 				mCtrlBlock.getBusNum(),
 				mCtrlBlock.getDevNum(),
 				getUSBFSName(mCtrlBlock));
-			sb.append("调用nativeConnect返回值："+result);
-//			long id_camera, int venderId, int productId, int fileDescriptor, int busNum, int devAddr, String usbfs
 		} catch (final Exception e) {
 			Log.w(TAG, e);
-			for(int i = 0; i< e.getStackTrace().length; i++){
-				sb.append(e.getStackTrace()[i].toString());
-				sb.append("\n");
-			}
-			sb.append("core message ->"+e.getLocalizedMessage());
 			result = -1;
 		}
-
 		if (result != 0) {
-			throw new UnsupportedOperationException("open failed:result=" + result+"----->" +
-					"id_camera="+mNativePtr+";venderId="+mCtrlBlock.getVenderId()
-					+";productId="+mCtrlBlock.getProductId()+";fileDescriptor="+mCtrlBlock.getFileDescriptor()
-					+";busNum="+mCtrlBlock.getBusNum()+";devAddr="+mCtrlBlock.getDevNum()
-					+";usbfs="+getUSBFSName(mCtrlBlock)+"\n"+"Exception："+sb.toString());
+			throw new UnsupportedOperationException("open failed:result=" + result);
 		}
-
     	if (mNativePtr != 0 && TextUtils.isEmpty(mSupportedSize)) {
     		mSupportedSize = nativeGetSupportedSize(mNativePtr);
     	}
