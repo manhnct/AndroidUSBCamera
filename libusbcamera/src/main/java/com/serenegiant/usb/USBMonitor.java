@@ -64,7 +64,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public final class USBMonitor {
 
-	private static final boolean DEBUG = false;	// TODO set false on production
+	private static final boolean DEBUG = true;	// TODO set false on production
 	private static final String TAG = "USBMonitor";
 
 	private static final String ACTION_USB_PERMISSION_BASE = "com.serenegiant.USB_PERMISSION.";
@@ -481,6 +481,7 @@ public final class USBMonitor {
 
 		@Override
 		public void onReceive(final Context context, final Intent intent) {
+			Log.d(TAG, "onRecieved: mUsbReceiver - isDestroyed = " + destroyed);
 			if (destroyed) return;
 			final String action = intent.getAction();
 			if (ACTION_USB_PERMISSION.equals(action)) {
@@ -498,10 +499,12 @@ public final class USBMonitor {
 					}
 				}
 			} else if (UsbManager.ACTION_USB_DEVICE_ATTACHED.equals(action)) {
+				Log.d(TAG, "onRecieved: ACTION_USB_DEVICE_ATTACHED");
 				final UsbDevice device = intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
 				updatePermission(device, hasPermission(device));
 				processAttach(device);
 			} else if (UsbManager.ACTION_USB_DEVICE_DETACHED.equals(action)) {
+				Log.d(TAG, "onRecieved: ACTION_USB_DEVICE_DETACHED");
 				// when device removed
 				final UsbDevice device = intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
 				if (device != null) {

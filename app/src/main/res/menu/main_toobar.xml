@@ -17,4 +17,8 @@
         android:id="@+id/menu_resolution"
         android:title="resolution(分辨率)"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/refresh_camera"
+        android:title="Refresh camera"
+        app:showAsAction="never" />
 </menu>

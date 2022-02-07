@@ -367,4 +367,6 @@ public class UVCCameraHelper {
     public int getPreviewHeight() {
         return previewHeight;
     }
+
+
 }

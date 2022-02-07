@@ -72,21 +72,36 @@ public class USBCameraActivity extends AppCompatActivity implements CameraDialog
 
         @Override
         public void onAttachDev(UsbDevice device) {
-            // request open permission
-            if (!isRequest) {
-                isRequest = true;
-                if (mCameraHelper != null) {
-                    mCameraHelper.requestPermission(0);
+            showShortMsg("device infor: getDeviceClass = " + device.getDeviceClass() + " getDeviceSubclass = "+ device.getDeviceSubclass() + " vendorID = " + device.getVendorId() + " productID = "+device.getProductId());
+            if((device.getDeviceClass()==239 && device.getDeviceSubclass()==2)
+                ||(device.getDeviceClass()==14 && device.getDeviceSubclass()==9)
+                ||(device.getDeviceClass()==2 && device.getDeviceSubclass()==0)
+                ||(device.getDeviceClass()==6 && device.getDeviceSubclass()==-1)
+                ||(device.getDeviceClass()==39 && device.getDeviceSubclass()==0)
+                    ||(device.getProductId()==4836 && device.getVendorId()==9573)
+                    ||(device.getProductId()==2229 && device.getVendorId()==1133)
+                    ||(device.getProductId()==640 && device.getVendorId()==1409)
+                    ||(device.getProductId()==258 && device.getVendorId()==9228)
+                    ||(device.getProductId()==1 && device.getVendorId()==1828)){
+                // request open permission
+                if (!isRequest) {
+                    isRequest = true;
+                    if (mCameraHelper != null ) {
+                        showShortMsg("mCameraHelper.requestPermission(0)");
+                        mCameraHelper.requestPermission(0);
+                    }
                 }
             }
+
         }
 
         @Override
         public void onDettachDev(UsbDevice device) {
             // close camera
-            if (isRequest) {
+            if (isRequest ) {
                 isRequest = false;
                 mCameraHelper.closeCamera();
+                showShortMsg("mCameraHelper.closeCamera()");
                 showShortMsg(device.getDeviceName() + " is out");
             }
         }
@@ -196,6 +211,7 @@ public class USBCameraActivity extends AppCompatActivity implements CameraDialog
         super.onStart();
         // step.2 register USB event broadcast
         if (mCameraHelper != null) {
+            showShortMsg("onStart - mCameraHelper.registerUSB(");
             mCameraHelper.registerUSB();
         }
     }
@@ -204,6 +220,7 @@ public class USBCameraActivity extends AppCompatActivity implements CameraDialog
     protected void onStop() {
         super.onStop();
         // step.3 unregister USB event broadcast
+        showShortMsg("onStop - mCameraHelper.unregisterUSB(");
         if (mCameraHelper != null) {
             mCameraHelper.unregisterUSB();
         }
@@ -305,6 +322,14 @@ public class USBCameraActivity extends AppCompatActivity implements CameraDialog
                 }
                 mCameraHelper.startCameraFoucs();
                 break;
+            case R.id.refresh_camera:
+                if (!mCameraHelper.isCameraOpened()) {
+                    CameraDialog.showDialog(this);
+                } else {
+                    showShortMsg("sorry,camera open failed");
+                }
+                break;
+
         }
         return super.onOptionsItemSelected(item);
     }
@@ -358,28 +383,32 @@ public class USBCameraActivity extends AppCompatActivity implements CameraDialog
         super.onDestroy();
         FileUtils.releaseFile();
         // step.4 release uvc camera resources
+        showShortMsg("onDestroy - release mCameraHelper");
         if (mCameraHelper != null) {
             mCameraHelper.release();
         }
     }
 
     private void showShortMsg(String msg) {
-        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+        Log.d("USBCameraActivity", "Msg: "+msg);
     }
 
     @Override
     public USBMonitor getUSBMonitor() {
+        showShortMsg("getUSBMonitor");
         return mCameraHelper.getUSBMonitor();
     }
 
     @Override
     public void onDialogResult(boolean canceled) {
         if (canceled) {
-            showShortMsg("取消操作");
+            showShortMsg("onDialogResult");
         }
     }
 
     public boolean isCameraOpened() {
+        showShortMsg("isCameraOpened()");
         return mCameraHelper.isCameraOpened();
     }
 
